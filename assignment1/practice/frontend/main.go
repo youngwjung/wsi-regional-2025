@@ -20,8 +20,8 @@ func main() {
 
 	// API 엔드포인트 정의
 	r.GET("/home", index)
-	r.GET("/home/stress", startStress)              // CPU 부하 시작
-	r.GET("/home/stop-stress", stopStress)          // CPU 부하 중지
+	r.POST("/home/stress", startStress)             // CPU 부하 시작
+	r.POST("/home/stop-stress", stopStress)         // CPU 부하 중지
 	r.GET("/home/cpu-usage", func(c *gin.Context) { // 현재 CPU 코어 사용량 확인
 		c.JSON(http.StatusOK, gin.H{
 			"num_cpu":       runtime.NumCPU(),

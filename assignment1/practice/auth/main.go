@@ -19,8 +19,8 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.POST("/auth", authHandler) // 인증 엔드포인트 등록
-	r.Run(":3000")               // 서버 실행
+	r.POST("/", authHandler) // 인증 엔드포인트 등록
+	r.Run(":3000")           // 서버 실행
 }
 
 // authHandler는 인증 요청을 처리하는 핸들러입니다.
@@ -32,8 +32,8 @@ func authHandler(c *gin.Context) {
 		return
 	}
 
-	// 요청 헤더의 Token 값이 일치하지 않으면 403 응답 반환
-	if c.GetHeader("Token") != authToken {
+	// 요청 헤더의 Authorization 값이 일치하지 않으면 403 응답 반환
+	if c.GetHeader("Authorization") != authToken {
 		c.JSON(http.StatusForbidden, gin.H{"message": "Invalid auth token"})
 		return
 	}

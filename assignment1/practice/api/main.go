@@ -30,12 +30,31 @@ var products = []Product{
 }
 
 func authMiddleware(c *gin.Context) {
-	resp, err := http.Get("http://auth-server.local")
+	// 인증 서버 URL
+	url := "http://auth-server.local"
+
+	// 새로운 POST 요청 생성
+	req, err := http.NewRequest("POST", url, nil)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		c.Abort()
+		return
+	}
+
+	// 요청 헤더 추가
+	req.Header.Set("Authorization", c.GetHeader("Authorization"))
+
+	// HTTP 클라이언트 생성 및 요청 수행
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 		c.Abort()
 		return
 	}
+	defer resp.Body.Close()
+
+	// 다음 핸들러 실행
 	c.Next()
 }
 
